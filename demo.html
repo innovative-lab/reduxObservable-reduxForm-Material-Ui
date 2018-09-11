@@ -1,0 +1,88 @@
+<html>
+
+<head>
+  <title></title>
+  
+  <style>
+    .container {
+      margin: 100px auto;
+      width: 200px;
+      border-bottom: 2px solid darkcyan;
+      position: relative;
+    }
+
+    input {
+      border: none;
+      font-size: 20px;
+      outline: none;
+    }
+
+    .lebal {
+      font-family: sans-serif;
+      position: absolute;
+      top: 5px;
+
+    }
+
+    .label_blur {
+      left: 0;
+      top: 5px;
+      transform: scale(1, 1);
+      animation: blur 0.5s ease;
+    }
+
+    .label_focused {
+      left: -8px;
+      top: -20px;
+      transform: scale(0.8, 0.8);
+      animation: focus 0.5s ease;
+    }
+
+    @keyframes focus {
+      0% {
+        transform: scale(1, 1);
+        top: 5px;
+        left: 0px;
+      }
+      100% {
+        transform: scale(0.8, 0.8);
+        top: -20px;
+        left: -8px;
+      }
+    }
+
+    @keyframes blur {
+      0% {
+        transform: scale(0.8, 0.8);
+        top: -20px;
+        left: -8px;
+      }
+      100% {
+        transform: scale(1, 1);
+        top: 5px;
+        left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class='lebal'>First Name</div>
+    <input type="text">
+  </div>
+
+  <script>
+      var inputEl = document.getElementsByTagName('input')[0];
+      var labelEl = document.getElementsByClassName('lebal')[0];
+      inputEl.addEventListener('focus', function () {
+        labelEl.classList.add('label_focused');
+      })
+      inputEl.addEventListener('blur', function () {
+        labelEl.classList.remove('label_focused');
+        labelEl.classList.add('label_blur');
+      })
+    </script>
+</body>
+
+</html>
