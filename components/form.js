@@ -11,9 +11,8 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText
-} from 'material-ui/Form';
-import './form.css';
-
+} from 'material-ui/Form'
+import './form.css'
 
 const renderTextField = ({ input, label, ...custom }) => (
   <TextField label={label} {...input} {...custom} />
@@ -22,6 +21,8 @@ const renderTextField = ({ input, label, ...custom }) => (
 const renderCheckbox = ({ input, label }) => (
   <Checkbox label={label} checked={input.value ? true : false} />
 )
+
+
 
 const renderRadioGroup = ({ input, ...rest }) => (
   <FormControl>
@@ -32,11 +33,11 @@ const renderRadioGroup = ({ input, ...rest }) => (
       onChange={(event, value) => input.onChange(value)}>
       {' '}
       <FormControlLabel
-        control={<Radio value="male" label="male" />}
+        control={<Radio value="male" checked={input.value === 'male'} />}
         label="Male"
       />
       <FormControlLabel
-        control={<Radio value="female" label="female" />}
+        control={<Radio value="female" checked={input.value === 'female'} />}
         label="Female"
       />
     </RadioGroup>
@@ -56,28 +57,27 @@ const renderSelectField = ({ input, label, children, ...custom }) => (
   </FormControl>
 )
 
-
 const MaterialUiForm = props => {
   const { handleSubmit, pristine, reset, submitting } = props
   return (
     <form onSubmit={handleSubmit}>
-      <div className='form_el'>
+      <div className="form_el">
         <Field
           name="firstName"
           component={renderTextField}
           label="First Name"
         />
       </div>
-      <div className='form_el'>
+      <div className="form_el">
         <Field name="lastName" component={renderTextField} label="Last Name" />
       </div>
-      <div className='form_el'>
+      <div className="form_el">
         <Field name="email" component={renderTextField} label="Email" />
       </div>
-      <div className='form_el'>
+      <div className="form_el">
         <Field name="sex" component={renderRadioGroup} />
       </div>
-      <div className='form_el'>
+      <div className="form_el">
         <Field
           name="favoriteColor"
           component={renderSelectField}
@@ -94,7 +94,7 @@ const MaterialUiForm = props => {
         </Field>
       </div>
 
-      <div className='form_el'>
+      <div className="form_el">
         <Field
           name="notes"
           component={renderTextField}
@@ -102,7 +102,7 @@ const MaterialUiForm = props => {
           rows={2}
         />
       </div>
-      <div className='form_el'>
+      <div className="form_el">
         <Button
           type="submit"
           variant="raised"
