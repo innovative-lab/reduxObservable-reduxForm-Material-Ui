@@ -1,2 +1,5 @@
 
 export const GET_POST_LIST = 'GET_POST_LIST';
+export const ADD_TO_FORM_LIST = 'ADD_TO_FORM_LIST';
+export const DELETE_FROM_FORM_LIST = 'DELETE_FROM_FORM_LIST';
+export const EDIT_FORM = 'EDIT_FORM';

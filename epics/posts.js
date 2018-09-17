@@ -6,9 +6,8 @@ import { setPost } from '../actions/posts';
 
 export default function getPosts(action$) {
 
-  console.log(action$.ofType(ActionTypes.GET_POST_LIST));
   return action$.ofType(ActionTypes.GET_POST_LIST)
-    .switchMap(() =>
+    .mergeMap(() =>
           Observable.merge(
           ajax.getJSON('https://jsonplaceholder.typicode.com/posts/')
             .map(res => setPost(res))

@@ -1,5 +1,6 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
+import { connect } from 'react-redux'
 import TextField from 'material-ui/TextField'
 import Radio, { RadioGroup } from 'material-ui/Radio'
 import Checkbox from 'material-ui/Checkbox'
@@ -14,17 +15,22 @@ import {
 } from 'material-ui/Form'
 import './form.css'
 
-const renderTextField = ({ input, label, ...custom }) => (
-  <TextField label={label} {...input} {...custom} />
+const required = value => (value ? undefined : 'Required');
+const email = value => (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
+  'Invalid email address' : undefined);
+const renderTextField = ({ input, label, ...custom ,meta:{touched,error}}) => (
+  <div >
+    <TextField label={label} {...input} {...custom} />
+    <div className='error'>{touched && (error && <span>{error}</span>)}</div>
+    
+  </div>
 )
 
 const renderCheckbox = ({ input, label }) => (
   <Checkbox label={label} checked={input.value ? true : false} />
 )
 
-
-
-const renderRadioGroup = ({ input, ...rest }) => (
+const renderRadioGroup = ({ input, ...rest ,meta:{touched,error}}) => (
   <FormControl>
     <FormLabel>Gender</FormLabel>
     <RadioGroup
@@ -41,10 +47,11 @@ const renderRadioGroup = ({ input, ...rest }) => (
         label="Female"
       />
     </RadioGroup>
+    <div className='error'>{touched && (error && <span>{error}</span>)}</div>
   </FormControl>
 )
 
-const renderSelectField = ({ input, label, children, ...custom }) => (
+const renderSelectField = ({ input, label, children, ...custom ,meta:{touched,error}}) => (
   <FormControl>
     <FormLabel>Fav Color</FormLabel>
     <Select
@@ -54,25 +61,32 @@ const renderSelectField = ({ input, label, children, ...custom }) => (
       children={children}
       {...custom}
     />
+    <div className='error'>{touched && (error && <span>{error}</span>)}</div>
   </FormControl>
 )
 
-const MaterialUiForm = props => {
-  const { handleSubmit, pristine, reset, submitting } = props
+let MaterialUiForm = props => {
+  const { handleSubmit, pristine, reset, submitting, dirty, destroy } = props
   return (
     <form onSubmit={handleSubmit}>
+      <div className="form_el">
+        <Button type="button" variant="raised" onClick={props.onload}>
+          Load value
+        </Button>
+      </div>
       <div className="form_el">
         <Field
           name="firstName"
           component={renderTextField}
           label="First Name"
+          validate = {required}
         />
       </div>
       <div className="form_el">
-        <Field name="lastName" component={renderTextField} label="Last Name" />
+        <Field name="lastName" component={renderTextField} label="Last Name" validate = {required}/>
       </div>
       <div className="form_el">
-        <Field name="email" component={renderTextField} label="Email" />
+        <Field name="email" component={renderTextField} label="Email" validate = {required, email}/>
       </div>
       <div className="form_el">
         <Field name="sex" component={renderRadioGroup} />
@@ -81,7 +95,7 @@ const MaterialUiForm = props => {
         <Field
           name="favoriteColor"
           component={renderSelectField}
-          label="Favorite Color">
+          label="Favorite Color" >
           <MenuItem value="Red" label="Red">
             Red
           </MenuItem>
@@ -100,20 +114,21 @@ const MaterialUiForm = props => {
           component={renderTextField}
           label="Notes"
           rows={2}
+          validate = {required}
         />
       </div>
       <div className="form_el">
         <Button
           type="submit"
           variant="raised"
-          disabled={pristine || submitting}
+          disabled={!dirty || submitting}
           color="primary">
           Submit
         </Button>
         <Button
           type="button"
           variant="raised"
-          disabled={pristine || submitting}
+          disabled={!dirty || submitting}
           onClick={reset}
           color="secondary">
           Clear Values
@@ -123,6 +138,14 @@ const MaterialUiForm = props => {
   )
 }
 
-export default reduxForm({
-  form: 'MaterialUiForm' // a unique identifier for this form
+MaterialUiForm = reduxForm({ form: 'MaterialUiForm' })(MaterialUiForm)
+
+const selector = formValueSelector('MaterialUiForm')
+MaterialUiForm = connect(state => {
+  const formValues = selector(state, 'firstName', 'lastName', 'email')
+  // console.log('selector', formValues)
+  return {
+    formValues
+  }
 })(MaterialUiForm)
+export default MaterialUiForm
